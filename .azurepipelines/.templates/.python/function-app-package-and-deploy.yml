@@ -36,6 +36,11 @@ parameters:
     default: ""
     displayName: "Desired archive file name"
 
+  - name: ARTIFACT_NAME
+    type: string
+    default: ""
+    displayName: "The name of the artifact"
+
   - name: STORE_ARTIFACT_AS_TAR
     type: boolean
     default: false
