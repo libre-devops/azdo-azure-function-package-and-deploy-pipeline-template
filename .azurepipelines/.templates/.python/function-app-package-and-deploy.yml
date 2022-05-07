@@ -85,13 +85,14 @@ steps:
       architecture: ${{ parameters.CODE_ARCH }}
 
   - pwsh: |
+      
       $back = $(Get-Location)
       ls
       python3 -m venv worker_venv ; `
       ls
       cd worker_venv ;
       ls 
-      cd Scripts ;
+      cd bin ;
       ls
       ./Activate.ps1
       pip3 install setuptools ; `
