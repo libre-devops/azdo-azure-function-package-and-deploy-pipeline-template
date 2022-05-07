@@ -6,6 +6,16 @@ parameters:
     default: ""
     displayName: "What version of terraform should be installed?"
 
+  - name: CODE_VERSION
+    type: string
+    default: ""
+    displayName: "What is version of your language stack, e.g. for python - 3.9?"
+
+  - name: CODE_ARCH
+    type: string
+    default: "x64"
+    displayName: "What is your architecture? Defaults to x64"
+
   - name: AZDO_SERVICE_CONNECTION_NAME
     type: string
     default: ""
@@ -22,6 +32,31 @@ parameters:
     displayName: "The function startup cmd"
 
 steps:
+
+  - task: UsePythonVersion@0
+    displayName: 'Use Python ${{ parameters.CODE_VERSION }}'
+    inputs:
+      versionSpec: ${{ parameters.CODE_VERSION }}
+      architecture: ${{ parameters.CODE_ARCH }}
+
+  - pwsh: |
+      if ($IsLinux)
+        {
+        python3 -m venv worker_venv ; ./worker_venv/bin/Activate.ps1
+        }
+      elseif ($IsMacOS)
+        {
+        python3 -m venv worker_venv ; ./worker_venv/bin/Activate.ps1
+        }
+      elseif ($IsWindows)
+        {
+        python3 -m venv worker_venv ; ./worker_venv/Scripts/Activate.ps1
+        }
+      pip3 install setuptools ; `
+      pip3 install -r requirements.txt
+    displayName: 'Install Application Dependencies'
+    workingDirectory: ${{ parameters.CODE_PATH }}
+    enabled: true
 
   - task: AzureCLI@2
     name: SetVariablesAndDeploy
