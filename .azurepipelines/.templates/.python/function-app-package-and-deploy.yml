@@ -127,7 +127,3 @@ steps:
       package: ${{ parameters.FUNCTION_APP_PACKAGE_PATH }}
       runtimeStack: ${{ parameters.FUNCTION_APP_RUNTIME_STACK }}
       startUpCommand: ${{ parameters.FUNCTION_APP_STARTUP_COMMAND }}
-
-
-
-
