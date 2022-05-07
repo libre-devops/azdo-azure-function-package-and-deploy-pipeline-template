@@ -85,7 +85,6 @@ steps:
       architecture: ${{ parameters.CODE_ARCH }}
 
   - pwsh: |
-      
       $back = $(Get-Location)
       ls
       python3 -m venv worker_venv ; `
