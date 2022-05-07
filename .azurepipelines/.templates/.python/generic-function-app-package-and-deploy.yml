@@ -95,5 +95,5 @@ steps:
           }
         
         func azure functionapp publish ${{ parameters.FUNCTION_APP_NAME }} --python
-    displayName: 'Export Variables & Install Dependencies'
+    displayName: 'Export Variables & Install Dependencies, and Deploy to Function app ${{ parameters.FUNCTION_APP_NAME }}'
     enabled: true
