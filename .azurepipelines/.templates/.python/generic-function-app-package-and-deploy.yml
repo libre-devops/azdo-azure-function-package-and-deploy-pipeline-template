@@ -24,41 +24,41 @@ parameters:
 steps:
 
   - task: AzureCLI@2
-      name: SetVariablesAndDeploy
-      inputs:
-        azureSubscription: '${{ parameters.AZDO_SERVICE_CONNECTION_NAME }}'
-        scriptType: pscore
-        addSpnToEnvironment: true
-        workingDirectory: ${{ parameters.CODE_PATH }}
-        scriptLocation: inlineScript
-        inlineScript: |
-          $SubscriptionId = $(az account show --query "id" -o tsv)
-          Write-Host "##vso[task.setvariable variable=ARM_CLIENT_ID;isOutput=true]$($env:servicePrincipalId)"
-          Write-Host "##vso[task.setvariable variable=ARM_CLIENT_SECRET;isOutput=true;issecret=true]$($env:servicePrincipalKey)"
-          Write-Host "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID;isOutput=true]$($SubscriptionID)"
-          Write-Host "##vso[task.setvariable variable=ARM_TENANT_ID;isOutput=true]$($env:tenantId)"
-          
-          if ($IsLinux)
-            {
-            brew install gcc
-            brew tap azure/functions
-            brew install azure-functions-core-tools@${{ parameters.FUNCTION_CORE_TOOLS_VERSION }}
-            }
-          elseif ($IsMacOS)
-            {
-            brew install gcc 
-            brew tap azure/functions
-            brew install azure-functions-core-tools@${{ parameters.FUNCTION_CORE_TOOLS_VERSION }}
-            }
-          elseif ($IsWindows -And [string]::IsNullOrEmpty(${{ parameters.FUNCTION_CORE_TOOLS_VERSION }}))
-            {
-            choco install azure-functions-core-tools -y
-            }
-          elseif ($IsWindows -And [string]::IsNotNullOrEmpty(${{ parameters.FUNCTION_CORE_TOOLS_VERSION }}))
-            {
-            choco install azure-functions-core-tools-${{ parameters.FUNCTION_CORE_TOOLS_VERSION }}  -y
-            }
-          
-          func azure functionapp publish ${{ parameters.FUNCTION_APP_NAME }} --python
-      displayName: 'Export Variables & Install Dependencies'
-      enabled: true
+    name: SetVariablesAndDeploy
+    inputs:
+      azureSubscription: '${{ parameters.AZDO_SERVICE_CONNECTION_NAME }}'
+      scriptType: pscore
+      addSpnToEnvironment: true
+      workingDirectory: ${{ parameters.CODE_PATH }}
+      scriptLocation: inlineScript
+      inlineScript: |
+        $SubscriptionId = $(az account show --query "id" -o tsv)
+        Write-Host "##vso[task.setvariable variable=ARM_CLIENT_ID;isOutput=true]$($env:servicePrincipalId)"
+        Write-Host "##vso[task.setvariable variable=ARM_CLIENT_SECRET;isOutput=true;issecret=true]$($env:servicePrincipalKey)"
+        Write-Host "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID;isOutput=true]$($SubscriptionID)"
+        Write-Host "##vso[task.setvariable variable=ARM_TENANT_ID;isOutput=true]$($env:tenantId)"
+        
+        if ($IsLinux)
+          {
+          brew install gcc
+          brew tap azure/functions
+          brew install azure-functions-core-tools@${{ parameters.FUNCTION_CORE_TOOLS_VERSION }}
+          }
+        elseif ($IsMacOS)
+          {
+          brew install gcc 
+          brew tap azure/functions
+          brew install azure-functions-core-tools@${{ parameters.FUNCTION_CORE_TOOLS_VERSION }}
+          }
+        elseif ($IsWindows -And [string]::IsNullOrEmpty(${{ parameters.FUNCTION_CORE_TOOLS_VERSION }}))
+          {
+          choco install azure-functions-core-tools -y
+          }
+        elseif ($IsWindows -And [string]::IsNotNullOrEmpty(${{ parameters.FUNCTION_CORE_TOOLS_VERSION }}))
+          {
+          choco install azure-functions-core-tools-${{ parameters.FUNCTION_CORE_TOOLS_VERSION }}  -y
+          }
+        
+        func azure functionapp publish ${{ parameters.FUNCTION_APP_NAME }} --python
+    displayName: 'Export Variables & Install Dependencies'
+    enabled: true
