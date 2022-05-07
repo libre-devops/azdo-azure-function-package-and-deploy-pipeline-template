@@ -87,6 +87,7 @@ steps:
   - pwsh: |
       ls
       python3 -m venv worker_venv ; `
+      ls
       cd worker_venv/Scripts ; `
       ./Activate.ps1
       pip3 install setuptools ; `
