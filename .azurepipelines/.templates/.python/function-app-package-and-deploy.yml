@@ -85,15 +85,18 @@ steps:
       architecture: ${{ parameters.CODE_ARCH }}
 
   - pwsh: |
-      $back = $(Get-Location)
-      ls
-      python3 -m venv worker_venv ; `
-      ls
-      cd worker_venv ;
-      ls 
-      cd bin ;
-      ls
-      ./Activate.ps1
+      if ($IsLinux)
+        {
+        python3 -m venv worker_venv ; ./worker_venv/bin/Activate.ps1
+        }
+      elseif ($IsMacOS)
+        {
+        python3 -m venv worker_venv ; ./worker_venv/bin/Activate.ps1
+        }
+      elseif ($IsWindows)
+        {
+        python3 -m venv worker_venv ; ./worker_venv/Scripts/Activate.ps1
+        }
       pip3 install setuptools ; `
       pip3 install -r requirements.txt
     displayName: 'Install Application Dependencies'
