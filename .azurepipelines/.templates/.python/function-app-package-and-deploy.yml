@@ -85,9 +85,11 @@ steps:
       architecture: ${{ parameters.CODE_ARCH }}
 
   - pwsh: |
-      python3 -m venv worker_venv
-      ./worker_venv/Scripts/Activate.ps1
-      pip3 install setuptools
+      ls
+      python3 -m venv worker_venv ; `
+      cd worker_venv/Scripts ; `
+      ./Activate.ps1
+      pip3 install setuptools ; `
       pip3 install -r requirements.txt
     displayName: 'Install Application Dependencies'
     workingDirectory: ${{ parameters.CODE_PATH }}
