@@ -1,0 +1,1 @@
+# azdo-azure-function-package-and-deploy-pipeline-template
