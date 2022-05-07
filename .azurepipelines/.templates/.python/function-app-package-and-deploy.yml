@@ -100,8 +100,6 @@ steps:
       archiveType: ${{ parameters.ARCHIVE_TYPE }}
       verbose: true
       archiveFile: '${{ parameters.ARCHIVE_PATH }}/${{ parameters.ARCHIVE_FILE_NAME }}'
-        verbose: true
-        quiet: true
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
