@@ -1,0 +1,120 @@
+---
+parameters:
+
+  - name: CODE_VERSION
+    type: string
+    default: ""
+    displayName: "What is version of your language stack, e.g. for python - 3.9?"
+
+  - name: CODE_ARCH
+    type: string
+    default: "x64"
+    displayName: "What is your architecture? Defaults to x64"
+
+  - name: CODE_PATH
+    type: string
+    default: ""
+    displayName: "What version of terraform should be installed?"
+
+  - name: FILE_TO_ARCHIVE
+    type: string
+    default: ""
+    displayName: "Desired file to be archived"
+
+  - name: ARCHIVE_PATH
+    type: string
+    default: ""
+    displayName: "Desired archive file path"
+
+  - name: ARCHIVE_TYPE
+    type: string
+    default: "zip"
+    displayName: "Desired archive type, defaults to zip"
+
+  - name: ARCHIVE_FILE_NAME
+    type: string
+    default: ""
+    displayName: "Desired archive file name"
+
+  - name: ARCHIVE_FILE_NAME
+    type: boolean
+    default: false
+    displayName: "Do you wish to tar the artifact before upload, defaults to false"
+
+  - name: AZDO_SERVICE_CONNECTION_NAME
+    type: string
+    default: ""
+    displayName: "The name of the azdo service connection which has IAM to your function app"
+
+  - name: FUNCTION_APP_NAME
+    type: string
+    default: ""
+    displayName: "The name of the function app you wish to deploy too"
+
+  - name: FUNCTION_APP_TYPE
+    type: string
+    default: ""
+    displayName: "The type of function app"
+
+  - name: FUNCTION_APP_PACKAGE_PATH
+    type: string
+    default: ""
+    displayName: "The path to the app package"
+
+  - name: FUNCTION_APP_RUNTIME_STACK
+    type: string
+    default: ""
+    displayName: "The type of Azure function app you are deploying too"
+
+  - name: FUNCTION_APP_STARTUP_COMMAND
+    type: string
+    default: ""
+    displayName: "The function startup cmd"
+
+steps:
+
+  - task: UsePythonVersion@0
+    displayName: 'Use Python ${{ parameters.CODE_VERSION }}'
+    inputs:
+      versionSpec: ${{ parameters.CODE_VERSION }}
+      architecture: ${{ parameters.CODE_ARCH }}
+
+  - pwsh: |
+      python3 -m venv worker_venv
+      source worker_venv/bin/activate
+      pip3 install setuptools
+      pip3 install -r requirements.txt
+    displayName: 'Install Application Dependencies'
+    workingDirectory: ${{ parameters.CODE_PATH }}
+    enabled: true
+
+  - task: ArchiveFiles@2
+    displayName: 'Archive files'
+    inputs:
+      rootFolderOrFile: '${{ parameters.FILE_TO_ARCHIVE }}'
+      archiveType: ${{ parameters.ARCHIVE_TYPE }}
+      verbose: true
+      archiveFile: '${{ parameters.ARCHIVE_PATH }}/${{ parameters.ARCHIVE_FILE_NAME }}'
+        verbose: true
+        quiet: true
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact'
+    inputs:
+      PathtoPublish: '${{ parameters.ARCHIVE_PATH }}'
+      ArtifactName: ${{ parameters.ARTIFACT_NAME }}
+      StoreAsTar: ${{ parameters.STORE_ARTIFACT_AS_TAR }}
+
+  - task: AzureFunctionApp@1
+    displayName: 'Azure Function App Deploy: ${{ parameters.FUNCTION_APP_NAME }}'
+    inputs:
+      azureSubscription: '${{ parameters.AZDO_SERVICE_CONNECTION_NAME }}'
+      appType: ${{ parameters.FUNCTION_APP_TYPE }}
+      appName: ${{ parameters.FUNCTION_APP_NAME }}
+      package: ${{ parameters.FUNCTION_APP_PACKAGE_PATH }}
+      runtimeStack: ${{ parameters.FUNCTION_APP_RUNTIME_STACK }}
+      startUpCommand: ${{ parameters.FUNCTION_APP_STARTUP_COMMAND }}
+
+
+
+
