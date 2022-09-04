@@ -30,6 +30,10 @@ parameters:
     type: string
     default: "4"
     displayName: "The function startup cmd"
+    
+  - name: FUNCTION_APP_DEPLOY_COMMAND
+    type: string
+    default: "func azure functionapp publish ${{ parameters.FUNCTION_APP_NAME }} --python"
 
 steps:
 
@@ -94,6 +98,6 @@ steps:
           choco install azure-functions-core-tools-${{ parameters.FUNCTION_CORE_TOOLS_VERSION }}  -y
           }
         
-        func azure functionapp publish ${{ parameters.FUNCTION_APP_NAME }} --python
+        ${{ parameters.FUNCTION_APP_DEPLOY_COMMAND }}
     displayName: 'Export Variables & Install Dependencies, and Deploy to Function app ${{ parameters.FUNCTION_APP_NAME }}'
     enabled: true
