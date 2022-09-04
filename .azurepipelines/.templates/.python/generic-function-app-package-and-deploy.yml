@@ -33,7 +33,7 @@ parameters:
     
   - name: FUNCTION_APP_DEPLOY_COMMAND
     type: string
-    default: "func azure functionapp publish ${{ parameters.FUNCTION_APP_NAME }} --python"
+    default: "func azure functionapp publish --python ${{ parameters.FUNCTION_APP_NAME }}"
 
 steps:
 
